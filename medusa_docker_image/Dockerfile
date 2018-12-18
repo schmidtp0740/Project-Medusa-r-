@@ -1,15 +1,20 @@
-FROM python:3.4-alpine
+FROM python:3.4
 
-RUN apk update \
-	&& apk add bash \
-        && apk add git \
-        && apk add --no-cache openssl-dev libffi-dev musl-dev make gcc \
-        && apk add py-mysqldb \
-        && apk add mariadb-dev \
-        && mkdir medusa_keys \
-	&& mkdir -p home/opc/.oci \
-        && git clone https://github.com/bpeters-cmu/Project-Medusa-r-.git \
-	&& apk add --no-cache openssl  
+# Testing with not needing these packages
+# RUN apk update \
+#        && apk add bash \
+#         && apk add git \
+#         && apk add --no-cache openssl-dev libffi-dev musl-dev make gcc \
+#         && apk add py-mysqldb \
+#         && apk add mariadb-dev \
+#         && mkdir medusa_keys \
+#        && mkdir -p home/opc/.oci \
+#         && git clone https://github.com/bpeters-cmu/Project-Medusa-r-.git \
+#       && apk add --no-cache openssl
+
+RUN mkdir medusa_keys
+RUN mkdir -p home/opc/.oci
+RUN git clone https://github.com/bpeters-cmu/Project-Medusa-r-.git 
 
 WORKDIR /Project-Medusa-r-
 RUN pip install -r requirements.txt
