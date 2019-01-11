@@ -14,12 +14,9 @@ FROM python:3.4
 
 RUN mkdir medusa_keys
 RUN mkdir -p home/opc/.oci
-RUN git clone https://github.com/bpeters-cmu/Project-Medusa-r-.git 
-
 WORKDIR /Project-Medusa-r-
+COPY . .
 RUN pip install -r requirements.txt
-
-ADD config.py /Project-Medusa-r-/
 EXPOSE 8000
 RUN openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
     -subj "/C=US/ST=Texas/L=Austin/O=Oracle/CN=Medusa" \

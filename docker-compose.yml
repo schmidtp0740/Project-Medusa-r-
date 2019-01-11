@@ -11,7 +11,8 @@ services:
        - db_data:/var/lib/mysql
       restart: always
   medusa:
-      image: medusa
+      build: ./medusa_docker_image
+      image: medusa:0.0.1
       command: bash -c 'sleep 15 && python db_init.py && gunicorn --bind 0.0.0.0:8000 -w 2 -k gevent --worker-connections 50 wsgi'
       ports:
        - "8000:8000"
@@ -21,29 +22,37 @@ services:
        - file_volume:/medusa_keys
        - keys:/home/opc/.oci
       restart: always
+
   nginx:
-      image: nginx
+      build: ./nginx_docker_image
+      image: medusa-nginx:0.0.1
       ports:
-       - "80:80"
+       - "8080:80"
       restart: always
       command: bash -c './usr/share/nginx/html/env.sh > /usr/share/nginx/html/env.js && nginx -g "daemon off;"'
       environment:
-       - HOST="129.146.85.80"
+       - HOST="localhost"
+
   ssh:
-      image: ssh
+      build: ./ssh2
+      image: medusa-ssh2:0.0.1
       command: "npm start"
       ports:
        - "2222:2222"
       volumes:
        - file_volume:/SSH2-Medusa/medusa_keys
       restart: always
+
   node_guacd:
-     image: node_guacd
+     build: ./node_guacd
+     image: medusa-node-guacd:0.0.1
      ports:
        - "8291:8291"
      restart: always
+
   frontend:
-    image: frontend
+    build: ./frontend
+    image: medusa-frontend:0.0.1
     ports:
       - "3000:3000"
     restart: always
